@@ -1,48 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>扁平化多纬数组</title>
-</head>
-<body>
-  <script type="text/javascript">
-    // 扁平化多纬数组及性能测试
 
-    // 传统递归
-    function flatFn (arr = []) {
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>扁平化多纬数组</title>
+</head>
+
+<body>
+	<script type="text/javascript">
+		// 扁平化多纬数组及性能测试
+
+		// 传统递归
+		function flatFn(arr = []) {
 			let newArr = []
 			arr.forEach((item) => {
 				// console.log(new Date().getTime())
-				if(item instanceof Array) {
+				if (item instanceof Array) {
 					newArr = newArr.concat(flatFn(item))
 				} else {
 					newArr.push(item)
 				}
 			})
 			return newArr
-    }
-    
-    // while递归
-		function flatFn2 (arr = []) {
-			while(arr.some(item => Array.isArray(item))) {
+		}
+
+		// while递归
+		function flatFn2(arr = []) {
+			while (arr.some(item => Array.isArray(item))) {
 				// arr = [].concat(...arr) // 该语句和下句同意
 				arr = Array.prototype.concat.apply([], arr)
 			}
 			return arr
-    }
+		}
 
-    // es6+ 反正不是es5的
-    function flatFn3 (arr = []) {
+		// es6+ 反正不是es5的
+		function flatFn3(arr = []) {
 			return arr.flat(Infinity)
-    }
-    
-    // 性能计算
-		async function spkTime (fn) {
+		}
+
+		// 性能计算
+		async function spkTime(fn) {
 			const startTime = new Date().getTime()
-			await function() {
-				for(let i = 0; i < 1000000; i++) {
+			await function () {
+				for (let i = 0; i < 1000000; i++) {
 					window[fn]([1, [2, 3], [4, [5, [6]]]])
 				}
 			}()
@@ -52,12 +54,13 @@
 				time: endTime - startTime // 耗时
 			}
 		}
-		async function spk () {
+		async function spk() {
 			await spkTime('flatFn').then(e => console.log(e))
 			await spkTime('flatFn2').then(e => console.log(e))
 			await spkTime('flatFn3').then(e => console.log(e))
 		}
 		spk()
-  </script>
+	</script>
 </body>
+
 </html>
